@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortnight Budget — Budgeting for Australian Pay Cycles</title>
+    <meta name="description" content="A budgeting app that works the way Australians get paid. Fortnightly, weekly, or monthly — your budget aligns with your actual pay cycle.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --green: #059669;
+            --green-dark: #047857;
+            --green-light: #d1fae5;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --white: #ffffff;
+            --red-50: #fef2f2;
+            --red-500: #ef4444;
+            --amber-50: #fffbeb;
+            --amber-600: #d97706;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: var(--gray-800);
+            line-height: 1.6;
+            background: var(--white);
+        }
+
+        .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+        .container-wide { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header / Nav */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 24px; max-width: 960px; margin: 0 auto;
+        }
+        .logo {
+            font-weight: 700; font-size: 1.25rem;
+            color: var(--gray-900);
+        }
+        .logo span { color: var(--green); }
+        nav a { color: var(--gray-600); text-decoration: none; font-size: 0.875rem; }
+        nav a:hover { color: var(--green); }
+
+        /* Hero */
+        .hero {
+            padding: 80px 0 60px;
+            background: linear-gradient(135deg, var(--gray-50) 0%, #ecfdf5 100%);
+        }
+        .hero h1 {
+            font-size: 2.5rem; font-weight: 800; line-height: 1.2;
+            margin-bottom: 16px;
+            color: var(--gray-900);
+        }
+        .hero h1 span { color: var(--green); }
+        .hero p {
+            font-size: 1.125rem; color: var(--gray-600);
+            max-width: 520px; margin-bottom: 32px;
+        }
+
+        .hero-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+            align-items: center;
+        }
+
+        /* Phone mockup */
+        .phone-mockup {
+            background: var(--gray-900);
+            border-radius: 32px;
+            padding: 16px;
+            max-width: 320px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .phone-screen {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 20px 16px;
+            min-height: 400px;
+        }
+        .phone-header { 
+            font-weight: 700; font-size: 1rem; margin-bottom: 16px;
+            color: var(--gray-900);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .phone-sub { font-size: 0.75rem; color: var(--gray-400); }
+        .balance-card {
+            background: var(--green);
+            color: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .balance-label { font-size: 0.75rem; opacity: 0.85; }
+        .balance-amount { font-size: 1.5rem; font-weight: 700; }
+        .balance-next { font-size: 0.75rem; opacity: 0.85; margin-top: 4px; }
+        .bill-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 0.875rem;
+        }
+        .bill-item:last-child { border-bottom: none; }
+        .bill-name { color: var(--gray-700); }
+        .bill-amount { font-weight: 600; color: var(--gray-900); }
+        .bill-date { font-size: 0.75rem; color: var(--gray-400); }
+        .mockup-bills-title {
+            font-size: 0.75rem; font-weight: 600; color: var(--gray-400);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-top: 8px;
+        }
+
+        /* Form */
+        .form-group { display: flex; gap: 8px; margin-bottom: 8px; }
+        .form-group input {
+            flex: 1; padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .form-group input:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-light); }
+        .btn {
+            display: inline-block; padding: 12px 24px;
+            background: var(--green); color: white;
+            font-weight: 600; font-size: 1rem;
+            border: none; border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+        .btn:hover { background: var(--green-dark); }
+        .btn-secondary {
+            background: var(--gray-900);
+        }
+        .btn-secondary:hover { background: #000; }
+
+        .form-note {
+            font-size: 0.75rem; color: var(--gray-400);
+        }
+
+        /* Problems section */
+        .section {
+            padding: 64px 0;
+        }
+        .section-alt { background: var(--gray-50); }
+
+        .section h2 {
+            font-size: 1.75rem; font-weight: 700;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .section .subtitle {
+            text-align: center; color: var(--gray-500);
+            margin-bottom: 48px; max-width: 520px; margin-left: auto; margin-right: auto;
+        }
+
+        .problem-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+        }
+        .problem-card {
+            background: var(--white);
+            border-radius: 12px; padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .problem-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+        .problem-card p { font-size: 0.875rem; color: var(--gray-600); }
+
+        .signal-badge {
+            display: inline-block;
+            padding: 2px 10px; border-radius: 999px;
+            font-size: 0.75rem; font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .signal-red { background: var(--red-50); color: var(--red-500); }
+        .signal-amber { background: var(--amber-50); color: var(--amber-600); }
+        .signal-green { background: var(--green-light); color: var(--green); }
+
+        /* Features */
+        .features-grid {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;
+        }
+        .feature-card { text-align: center; padding: 24px; }
+        .feature-icon {
+            width: 48px; height: 48px;
+            background: var(--green-light);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 1.5rem;
+        }
+        .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+        .feature-card p { font-size: 0.875rem; color: var(--gray-500); }
+
+        /* Pricing */
+        .pricing-grid {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+        }
+        .pricing-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px; padding: 24px;
+            text-align: center;
+        }
+        .pricing-card.featured {
+            border-color: var(--green);
+            box-shadow: 0 0 0 1px var(--green);
+        }
+        .pricing-name { font-weight: 600; color: var(--gray-500); font-size: 0.875rem; }
+        .pricing-price { font-size: 2rem; font-weight: 800; margin: 8px 0 4px; }
+        .pricing-price span { font-size: 1rem; font-weight: 400; color: var(--gray-400); }
+        .pricing-desc { font-size: 0.75rem; color: var(--gray-400); margin-bottom: 16px; }
+        .pricing-annual { font-size: 0.75rem; color: var(--gray-400); }
+        .pricing-features { list-style: none; margin: 16px 0; }
+        .pricing-features li {
+            font-size: 0.8125rem; color: var(--gray-600);
+            padding: 4px 0;
+        }
+        .pricing-features li::before { content: "✓ "; color: var(--green); font-weight: 700; }
+        .pricing-features li.na { color: var(--gray-200); }
+        .pricing-features li.na::before { content: "✗ "; color: var(--gray-200); }
+
+        /* Bottom CTA */
+        .cta-section {
+            background: linear-gradient(135deg, var(--gray-900) 0%, #064e3b 100%);
+            color: white;
+            padding: 64px 0;
+            text-align: center;
+        }
+        .cta-section h2 { color: white; }
+        .cta-section p { color: #a7f3d0; max-width: 480px; margin: 0 auto 32px; }
+        .cta-section .form-group input { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white; }
+        .cta-section .form-group input::placeholder { color: rgba(255,255,255,0.4); }
+        .cta-section .form-group input:focus { border-color: #34d399; box-shadow: 0 0 0 3px rgba(52,211,153,0.2); }
+        .cta-section .btn { background: #34d399; color: #064e3b; }
+        .cta-section .btn:hover { background: #6ee7b7; }
+        .cta-section .form-note { color: rgba(255,255,255,0.4); }
+
+        /* Competitor comparison */
+        .compare-note {
+            background: var(--gray-50);
+            border-radius: 12px; padding: 24px;
+            margin-top: 32px;
+        }
+        .compare-note p { font-size: 0.8125rem; color: var(--gray-500); line-height: 1.5; }
+        .compare-note strong { color: var(--gray-700); }
+
+        /* Footer */
+        footer {
+            padding: 24px 0;
+            text-align: center;
+            color: var(--gray-400);
+            font-size: 0.75rem;
+        }
+
+        /* FAQ */
+        .faq-list { max-width: 600px; margin: 0 auto; }
+        .faq-item { padding: 16px 0; border-bottom: 1px solid var(--gray-100); }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-q { font-weight: 600; margin-bottom: 4px; font-size: 0.9375rem; }
+        .faq-a { font-size: 0.875rem; color: var(--gray-600); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero { padding: 48px 0 40px; }
+            .hero h1 { font-size: 1.75rem; }
+            .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+            .phone-mockup { max-width: 280px; }
+            .problem-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; }
+            .form-group { flex-direction: column; }
+            .section h2 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <div class="logo">Fortnight <span>Budget</span></div>
+    <a href="#waitlist">Join Waitlist</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="container-wide">
+        <div class="hero-grid">
+            <div>
+                <h1>Your pay cycle is every <span>two weeks</span>. Your budget should be too.</h1>
+                <p>Fortnight Budget works the way Australians get paid. Your budget aligns with your actual pay cycle — not a monthly calendar designed in the US.</p>
+                <div class="form-group">
+                    <input type="email" placeholder="Enter your email" id="hero-email" name="email" required>
+                    <button class="btn" onclick="submitEmail('hero')">Get Early Access</button>
+                </div>
+                <p class="form-note">Early access pricing starts at $6.99/mo. No spam, unsubscribe anytime.</p>
+            </div>
+            <div>
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="phone-header">
+                            <span>Fortnight</span>
+                            <span class="phone-sub">22 May &mdash; 5 Jun</span>
+                        </div>
+                        <div class="balance-card">
+                            <div class="balance-label">Available until next pay</div>
+                            <div class="balance-amount">$847.32</div>
+                            <div class="balance-next">Next pay: 5 Jun</div>
+                        </div>
+                        <div class="mockup-bills-title">Upcoming Bills</div>
+                        <div class="bill-item">
+                            <div><div class="bill-name">Rent</div><div class="bill-date">1 Jun</div></div>
+                            <div class="bill-amount">-$1,200</div>
+                        </div>
+                        <div class="bill-item">
+                            <div><div class="bill-name">Electricity (Synergy)</div><div class="bill-date">28 May</div></div>
+                            <div class="bill-amount">-$218</div>
+                        </div>
+                        <div class="bill-item">
+                            <div><div class="bill-name">Internet (AussieBB)</div><div class="bill-date">25 May</div></div>
+                            <div class="bill-amount">-$99</div>
+                        </div>
+                        <div class="bill-item">
+                            <div><div class="bill-name">Phone (Boost)</div><div class="bill-date">26 May</div></div>
+                            <div class="bill-amount">-$30</div>
+                        </div>
+                        <div class="bill-item">
+                            <div><div class="bill-name">Netflix</div><div class="bill-date">27 May</div></div>
+                            <div class="bill-amount">-$16.99</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Problem -->
+<section class="section" id="problem">
+    <div class="container">
+        <h2>Budget apps weren't made for Australia</h2>
+        <p class="subtitle">Every major budgeting app assumes a monthly salary cycle. In Australia, that's not how most people get paid.</p>
+        <div class="problem-grid">
+            <div class="problem-card">
+                <span class="signal-badge signal-red">YNAB — $23 AUD/mo</span>
+                <h3>"Can't set a fortnight as a billing interval"</h3>
+                <p>YNAB users in Australia consistently complain about the lack of fortnightly pay cycle support — plus zero AU bank connections.</p>
+            </div>
+            <div class="problem-card">
+                <span class="signal-badge signal-red">PocketSmith — up to $28/mo</span>
+                <h3>47% of ratings are 1 or 2 stars</h3>
+                <p>3.1★ rating. Users complain the mobile app is a "sidekick" — you can't do anything useful without the desktop web app.</p>
+            </div>
+            <div class="problem-card">
+                <span class="signal-badge signal-amber">WeMoney — $9.99/mo</span>
+                <h3>Can't manually track debt or super</h3>
+                <p>65% of Pro user reviews are 1-2★. Sync breaks regularly, can't add accounts manually, no superannuation tracking.</p>
+            </div>
+            <div class="problem-card">
+                <span class="signal-badge signal-amber">Pocketbook</span>
+                <h3>Shutting down — 200k+ users need a home</h3>
+                <p>Pocketbook.com.au no longer resolves. The most popular AU budgeting app has disappeared with no clear successor.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How it works -->
+<section class="section section-alt">
+    <div class="container">
+        <h2>How it works</h2>
+        <p class="subtitle">Three steps to a budget that actually matches your money.</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Set your pay cycle</h3>
+                <p>Fortnightly, weekly, or monthly. Pick your next pay date. Your budget calendar adjusts automatically.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏦</div>
+                <h3>Connect or go manual</h3>
+                <p>Open Banking sync with 30+ AU banks, or track everything by hand. Your data stays yours.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👁️</div>
+                <h3>See your real balance</h3>
+                <p>Bills due between paydays? See your available balance — not a monthly category limit that ignores when money actually arrives.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="section">
+    <div class="container">
+        <h2>Core features</h2>
+        <p class="subtitle">Everything you need. Nothing you don't.</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Fortnightly pay cycle</h3>
+                <p>Budget in 2-week intervals. Your available balance resets on payday, not the 1st of the month.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3>Bill calendar</h3>
+                <p>See all upcoming bills sorted between paydays. Know exactly what's due before your next pay arrives.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✏️</div>
+                <h3>Natural language entry</h3>
+                <p>Type "coles 85.50 grocery" and it's done. No dropdowns, no categories to navigate.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>Open Banking (CDR)</h3>
+                <p>Read-only connection to CommBank, Westpac, NAB, ANZ, ING, UBank, Macquarie, Bankwest, and 20+ more.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Net worth tracking</h3>
+                <p>Track offset accounts, credit cards, super, and investments in one place.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>No data sharing</h3>
+                <p>We don't sell your data. We're a paid app, not a product.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing -->
+<section class="section section-alt" id="pricing">
+    <div class="container">
+        <h2>Simple pricing</h2>
+        <p class="subtitle">Less than coffee a week for a budget that actually works.</p>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-name">Free</div>
+                <div class="pricing-price">$0 <span>/mo</span></div>
+                <div class="pricing-desc">Get started with manual tracking</div>
+                <ul class="pricing-features">
+                    <li>Fortnightly pay cycle</li>
+                    <li>Manual transaction entry</li>
+                    <li>1 account</li>
+                    <li class="na">Open Banking sync</li>
+                    <li class="na">Unlimited accounts</li>
+                    <li class="na">Bill alerts</li>
+                </ul>
+                <button class="btn btn-secondary" style="width:100%" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Start Free</button>
+            </div>
+            <div class="pricing-card featured">
+                <div class="pricing-name">Plus</div>
+                <div class="pricing-price">$8.99 <span>/mo</span></div>
+                <div class="pricing-desc">or $85.99/yr (save 20%)</div>
+                <ul class="pricing-features">
+                    <li>Everything in Free</li>
+                    <li>Open Banking sync</li>
+                    <li>Unlimited accounts</li>
+                    <li>Bill alerts & detection</li>
+                    <li>Net worth tracking</li>
+                    <li>CSV export</li>
+                </ul>
+                <button class="btn" style="width:100%" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Join Waitlist</button>
+                <div class="pricing-annual" style="margin-top:8px">Early access: $6.99/mo</div>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-name">Pro</div>
+                <div class="pricing-price">$12.99 <span>/mo</span></div>
+                <div class="pricing-desc">or $124.99/yr (save 20%)</div>
+                <ul class="pricing-features">
+                    <li>Everything in Plus</li>
+                    <li>Debt paydown planner</li>
+                    <li>Custom categories & tags</li>
+                    <li>Shared budget (couples)</li>
+                    <li>Super tracking</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn btn-secondary" style="width:100%" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Join Waitlist</button>
+            </div>
+        </div>
+        
+        <div class="compare-note">
+            <p><strong>How we compare:</strong> WeMoney Pro is $9.99/mo. YNAB is $23 AUD/mo. We're cheaper than both — and actually built for Australian pay cycles.</p>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="section">
+    <div class="container">
+        <h2>Frequently asked questions</h2>
+        <p class="subtitle">The honest answers you'd expect from an Australian budgeting app.</p>
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-q">Can I use it without linking my bank?</div>
+                <div class="faq-a">Yes. Full manual mode works without linking any accounts. Type your transactions in plain English. No bank login required.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Do you support Open Banking?</div>
+                <div class="faq-a">Yes. We use the Consumer Data Right (CDR) standard — the same system CommBank and other AU banks use. Read-only, bank-grade encryption. We never store your banking credentials.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Is this just another PocketSmith or YNAB clone?</div>
+                <div class="faq-a">No. Those apps assume monthly budgeting. Fortnight Budget is built for the pay cycle that dominates Australia. The calendar view, bill allocation, and "available until next pay" balance are all designed around your actual pay rhythm — something no major app does well.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Can I import from Pocketbook?</div>
+                <div class="faq-a">Yes. We'll support CSV import from day one. If you have Pocketbook data, you can bring it with you.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">When will the app be available?</div>
+                <div class="faq-a">We're building it now. Join the waitlist and we'll let you know as soon as early access opens. First subscribers get $6.99/mo pricing for life.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="waitlist">
+    <div class="container">
+        <h2>Your budget should match your life — not the other way around.</h2>
+        <p>Join the waitlist. First 500 subscribers lock in $6.99/mo pricing for life.</p>
+        <div class="form-group" style="max-width: 440px; margin: 0 auto;">
+            <input type="email" placeholder="your@email.com" id="cta-email" name="email" required>
+            <button class="btn" onclick="submitEmail('cta')">Get Early Access</button>
+        </div>
+        <p class="form-note" style="color: rgba(255,255,255,0.4)">No spam. Unsubscribe anytime. Built in Australia.</p>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p>Built in Perth, Australia. &copy; 2026 Fortnight Budget. ABN: pending.</p>
+    </div>
+</footer>
+
+<!-- Thank you page -->
+<div id="thankyou" style="display:none">
+    <section class="section cta-section" style="min-height: 60vh; display: flex; align-items: center;">
+        <div class="container">
+            <h2>You're on the list.</h2>
+            <p>We'll email you when early access opens. First 500 subscribers get $6.99/mo for life.</p>
+            <p style="margin-top: 24px; font-size: 0.875rem; color: rgba(255,255,255,0.5)">In the meantime, tell a friend who needs a better budget app.</p>
+        </div>
+    </section>
+</div>
+
+<script>
+    // Track submissions in localStorage + redirect to thankyou
+    function submitEmail(source) {
+        const prefix = source === 'hero' ? 'hero' : 'cta';
+        const email = document.getElementById(prefix + '-email');
+        if (!email.value || !email.value.includes('@')) {
+            email.style.borderColor = '#ef4444';
+            email.placeholder = 'Please enter a valid email';
+            return;
+        }
+        
+        // Store locally
+        const existing = JSON.parse(localStorage.getItem('fb-waitlist') || '[]');
+        existing.push({ email: email.value, source: source, date: new Date().toISOString() });
+        localStorage.setItem('fb-waitlist', JSON.stringify(existing));
+        
+        // Show thank you
+        document.body.innerHTML = document.getElementById('thankyou').innerHTML;
+        
+        // We'll add a real form endpoint when Stripe/domain is ready
+        // For now, store locally and remind博士 to set up Formspree
+        console.log('Waitlist signup:', email.value, 'from', source);
+    }
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            e.preventDefault();
+            document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+</script>
+
+</body>
+</html>
