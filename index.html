@@ -289,6 +289,7 @@
 <!-- Navigation -->
 <nav>
     <div class="logo">Fortnight <span>Budget</span></div>
+    <a href="#survey">Survey</a>
     <a href="#waitlist">Join Waitlist</a>
 </nav>
 
@@ -527,6 +528,45 @@
     </div>
 </section>
 
+<!-- Survey Section -->
+<section class="section" id="survey" style="background: #f8fafc;">
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: 12px;">Are we building the right thing?</h2>
+        <p style="text-align: center; color: #64748b; margin-bottom: 32px;">3 quick questions to help shape the app.</p>
+        <div class="survey-grid" style="max-width: 640px; margin: 0 auto;">
+            <!-- Q1: Current budgeting tool -->
+            <div class="survey-question" style="margin-bottom: 24px;">
+                <p style="font-weight: 600; margin-bottom: 8px;"><strong>1. How do you currently track your spending?</strong></p>
+                <label style="display: block; padding: 8px 0;"><input type="radio" name="q1" value="ynab" onchange="trackSurvey()"> YNAB / PocketSmith / app</label>
+                <label style="display: block; padding: 8px 0;"><input type="radio" name="q1" value="spreadsheet" onchange="trackSurvey()"> Spreadsheet / notebook</label>
+                <label style="display: block; padding: 8px 0;"><input type="radio" name="q1" value="mental" onchange="trackSurvey()"> Mental math / rough tracking</label>
+                <label style="display: block; padding: 8px 0;"><input type="radio" name="q1" value="notracking" onchange="trackSurvey()"> I don't track my spending</label>
+            </div>
+            
+            <!-- Q2: Biggest pain point -->
+            <div class="survey-question" style="margin-bottom: 24px;">
+                <p style="font-weight: 600; margin-bottom: 8px;"><strong>2. What's your biggest budgeting frustration?</strong></p>
+                <label style="display: block; padding: 8px 0;"><input type="radio" name="q2" value="alignment" onchange="trackSurvey()"> My budget doesn't align with my pay cycle</label>
+                <label style="display: block; padding: 8px 0;"><input type="radio" name="q2" value="manual" onchange="trackSurvey()"> Too much manual entry, too tedious</label>
+                <label style="display: block; padding: 8px 0;"><input type="radio" name="q2" value="expensive" onchange="trackSurvey()"> Existing apps are too expensive</label>
+                <label style="display: block; padding: 8px 0;"><input type="radio" name="q2" value="complex" onchange="trackSurvey()"> Existing apps are too complex / feature-bloated</label>
+            </div>
+            
+            <!-- Q3: WTP -->
+            <div class="survey-question" style="margin-bottom: 32px;">
+                <p style="font-weight: 600; margin-bottom: 8px;"><strong>3. Would you pay for a budget app that aligns with YOUR pay cycle?</strong></p>
+                <label style="display: block; padding: 8px 0;"><input type="radio" name="q3" value="yes_10plus" onchange="trackSurvey()"> Yes — $10+/mo is fair for the right tool</label>
+                <label style="display: block; padding: 8px 0;"><input type="radio" name="q3" value="yes_5to10" onchange="trackSurvey()"> Yes — but only $5-10/mo</label>
+                <label style="display: block; padding: 8px 0;"><input type="radio" name="q3" value="yes_freeONLY" onchange="trackSurvey()"> Only if free (I'd use free version)</label>
+                <label style="display: block; padding: 8px 0;"><input type="radio" name="q3" value="no" onchange="trackSurvey()"> No — I don't need a dedicated budget app</label>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="submitSurvey()" style="width: 100%;">Submit Answers</button>
+            <p id="survey-thanks" style="display: none; text-align: center; color: #16a34a; margin-top: 16px;">✅ Thanks! Your feedback helps us build a better app.</p>
+        </div>
+    </div>
+</section>
+
 <!-- CTA -->
 <section class="cta-section" id="waitlist">
     <div class="container">
@@ -580,6 +620,32 @@
         // We'll add a real form endpoint when Stripe/domain is ready
         // For now, store locally and remind博士 to set up Formspree
         console.log('Waitlist signup:', email.value, 'from', source);
+    }
+
+    // Survey tracking
+    function trackSurvey() {
+        // Just tracks that an option was selected (for progress indication)
+    }
+    
+    function submitSurvey() {
+        const q1 = document.querySelector('input[name="q1"]:checked')?.value;
+        const q2 = document.querySelector('input[name="q2"]:checked')?.value;
+        const q3 = document.querySelector('input[name="q3"]:checked')?.value;
+        
+        if (!q1 || !q2 || !q3) {
+            alert('Please answer all 3 questions before submitting.');
+            return;
+        }
+        
+        const responses = JSON.parse(localStorage.getItem('fb-survey') || '[]');
+        responses.push({ q1, q2, q3, date: new Date().toISOString() });
+        localStorage.setItem('fb-survey', JSON.stringify(responses));
+        
+        document.getElementById('survey-thanks').style.display = 'block';
+        document.querySelector('.survey-grid button').disabled = true;
+        document.querySelector('.survey-grid button').textContent = 'Submitted ✅';
+        
+        console.log('Survey:', { q1, q2, q3 });
     }
 
     // Smooth scroll
