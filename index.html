@@ -289,6 +289,7 @@
 <!-- Navigation -->
 <nav>
     <div class="logo">Fortnight <span>Budget</span></div>
+    <a href="#demo">Try Demo</a>
     <a href="#survey">Survey</a>
     <a href="#waitlist">Join Waitlist</a>
 </nav>
@@ -527,6 +528,234 @@
         </div>
     </div>
 </section>
+
+<!-- Interactive Demo Section -->
+<section class="section section-alt" id="demo">
+    <div class="container">
+        <h2>Try it now</h2>
+        <p class="subtitle" style="margin-bottom:32px">See what your available balance looks like — no signup needed.</p>
+        
+        <div class="demo-app" style="max-width: 420px; margin: 0 auto; background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #e5e7eb;">
+            <!-- Step 1: Pay cycle -->
+            <div class="demo-step" id="demo-step-1" style="padding: 32px 24px;">
+                <div style="text-align:center; margin-bottom:24px;">
+                    <div style="font-size:36px; margin-bottom:8px;">📅</div>
+                    <h3 style="margin:0; font-size:1.25rem;">Your pay cycle</h3>
+                    <p style="color:#6b7280; font-size:0.875rem; margin-top:4px;">How often do you get paid?</p>
+                </div>
+                <button class="demo-option selected" onclick="demoSelectCycle('fortnightly')" data-cycle="fortnightly" style="display:block; width:100%; padding:16px; border:2px solid #10b981; background:#ecfdf5; border-radius:12px; text-align:left; font-size:1rem; cursor:pointer; margin-bottom:8px;">
+                    <strong>Fortnightly</strong> <span style="color:#6b7280; font-size:0.875rem;">— every 2 weeks</span>
+                </button>
+                <button class="demo-option" onclick="demoSelectCycle('weekly')" data-cycle="weekly" style="display:block; width:100%; padding:16px; border:2px solid #e5e7eb; background:#fff; border-radius:12px; text-align:left; font-size:1rem; cursor:pointer; margin-bottom:8px;">
+                    <strong>Weekly</strong> <span style="color:#6b7280; font-size:0.875rem;">— every 7 days</span>
+                </button>
+                <button class="demo-option" onclick="demoSelectCycle('monthly')" data-cycle="monthly" style="display:block; width:100%; padding:16px; border:2px solid #e5e7eb; background:#fff; border-radius:12px; text-align:left; font-size:1rem; cursor:pointer; margin-bottom:8px;">
+                    <strong>Monthly</strong> <span style="color:#6b7280; font-size:0.875rem;">— once a month</span>
+                </button>
+                <button onclick="demoNext(2)" style="width:100%; margin-top:24px; padding:14px; background:#10b981; color:#fff; border:none; border-radius:12px; font-size:1rem; font-weight:600; cursor:pointer;">Continue</button>
+            </div>
+            
+            <!-- Step 2: Pay amount -->
+            <div class="demo-step" id="demo-step-2" style="padding: 32px 24px; display:none;">
+                <div style="text-align:center; margin-bottom:24px;">
+                    <div style="font-size:36px; margin-bottom:8px;">💰</div>
+                    <h3 style="margin:0; font-size:1.25rem;">Your next pay</h3>
+                    <p style="color:#6b7280; font-size:0.875rem; margin-top:4px;">How much do you get each pay cycle?</p>
+                </div>
+                <div style="position:relative; margin-bottom:24px;">
+                    <span style="position:absolute; left:16px; top:50%; transform:translateY(-50%); font-size:1.5rem; color:#6b7280;">$</span>
+                    <input type="number" id="demo-pay" value="3200" style="width:100%; padding:16px 16px 16px 40px; border:2px solid #e5e7eb; border-radius:12px; font-size:1.5rem; text-align:right;" onchange="demoUpdate()">
+                </div>
+                <p style="color:#6b7280; font-size:0.875rem; text-align:center;">Based on AU median income ~$98K/yr = $3,200/fortnight after tax</p>
+                <div style="display:flex; gap:12px; margin-top:24px;">
+                    <button onclick="demoNext(1)" style="flex:1; padding:14px; background:#f3f4f6; color:#374151; border:none; border-radius:12px; font-size:1rem; cursor:pointer;">← Back</button>
+                    <button onclick="demoNext(3)" style="flex:3; padding:14px; background:#10b981; color:#fff; border:none; border-radius:12px; font-size:1rem; font-weight:600; cursor:pointer;">Add bills →</button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Add bills -->
+            <div class="demo-step" id="demo-step-3" style="padding: 32px 24px; display:none;">
+                <div style="text-align:center; margin-bottom:24px;">
+                    <div style="font-size:36px; margin-bottom:8px;">📋</div>
+                    <h3 style="margin:0; font-size:1.25rem;">Quick bills</h3>
+                    <p style="color:#6b7280; font-size:0.875rem; margin-top:4px;">Type your bills (any order, auto-detected)</p>
+                </div>
+                <div style="display:flex; gap:8px; margin-bottom:12px;">
+                    <input type="text" id="demo-bill-input" placeholder="rent 1200" style="flex:1; padding:12px 16px; border:2px solid #e5e7eb; border-radius:12px; font-size:1rem;"
+                        onkeydown="if(event.key==='Enter')demoAddBill()">
+                    <button onclick="demoAddBill()" style="padding:12px 20px; background:#10b981; color:#fff; border:none; border-radius:12px; cursor:pointer; font-weight:600;">Add</button>
+                </div>
+                <div id="demo-suggestions" style="margin-bottom:16px;">
+                    <button onclick="document.getElementById('demo-bill-input').value='rent 1200';demoAddBill()" style="padding:6px 12px; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:8px; font-size:0.75rem; margin:4px; cursor:pointer;">rent 1200</button>
+                    <button onclick="document.getElementById('demo-bill-input').value='synergy 218';demoAddBill()" style="padding:6px 12px; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:8px; font-size:0.75rem; margin:4px; cursor:pointer;">synergy 218</button>
+                    <button onclick="document.getElementById('demo-bill-input').value='netflix 16.99';demoAddBill()" style="padding:6px 12px; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:8px; font-size:0.75rem; margin:4px; cursor:pointer;">netflix 16.99</button>
+                    <button onclick="document.getElementById('demo-bill-input').value='car insurance 180';demoAddBill()" style="padding:6px 12px; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:8px; font-size:0.75rem; margin:4px; cursor:pointer;">insurance 180</button>
+                </div>
+                <div id="demo-bills" style="margin-bottom:16px;"></div>
+                <div id="demo-total" style="text-align:right; padding:12px; border-top:2px solid #e5e7eb; font-weight:600;">Total: $0.00</div>
+                <div style="display:flex; gap:12px; margin-top:24px;">
+                    <button onclick="demoNext(2)" style="flex:1; padding:14px; background:#f3f4f6; color:#374151; border:none; border-radius:12px; font-size:1rem; cursor:pointer;">← Back</button>
+                    <button onclick="demoShowResult()" style="flex:3; padding:14px; background:#10b981; color:#fff; border:none; border-radius:12px; font-size:1rem; font-weight:600; cursor:pointer;">Show my balance →</button>
+                </div>
+            </div>
+            
+            <!-- Step 4: The result -->
+            <div class="demo-step" id="demo-step-4" style="padding: 32px 24px; display:none; text-align:center;">
+                <div style="margin-bottom:24px;">
+                    <div style="font-size:36px; margin-bottom:8px;">🎯</div>
+                    <h3 style="margin:0; font-size:1.25rem;">Your Fortnight at a Glance</h3>
+                </div>
+                
+                <div id="demo-hero" style="background:linear-gradient(135deg,#10b981,#059669); border-radius:20px; padding:32px 24px; color:#fff; margin-bottom:24px;">
+                    <div style="font-size:3rem; font-weight:800; letter-spacing:-2px;">$0.00</div>
+                    <div style="font-size:0.875rem; opacity:0.9; margin-top:4px;">Available until next pay</div>
+                    <div style="margin-top:12px; background:rgba(255,255,255,0.2); border-radius:99px; padding:4px;">
+                        <div id="demo-progress" style="background:#fff; border-radius:99px; height:6px; width:50%; transition:width 0.5s;"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:6px; opacity:0.8;">
+                        <span>Day 7 of 14</span>
+                        <span>6 days until pay</span>
+                    </div>
+                </div>
+                
+                <div style="background:#f9fafb; border-radius:12px; padding:16px; margin-bottom:24px; text-align:left;">
+                    <div style="display:flex; justify-content:space-between; padding:8px 0;">
+                        <span style="color:#6b7280;">Income this cycle</span>
+                        <span id="demo-income" style="font-weight:600; color:#059669;">$0.00</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; padding:8px 0;">
+                        <span style="color:#6b7280;">Bills this cycle</span>
+                        <span id="demo-bills-total" style="font-weight:600; color:#ef4444;">-$0.00</span>
+                    </div>
+                    <div style="border-top:1px solid #e5e7eb; margin:8px 0;"></div>
+                    <div style="display:flex; justify-content:space-between; padding:8px 0;">
+                        <span style="font-weight:600;">Available</span>
+                        <span id="demo-available" style="font-weight:700; color:#059669; font-size:1.125rem;">$0.00</span>
+                    </div>
+                </div>
+                
+                <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:12px; margin-bottom:24px; font-size:0.875rem; color:#166534;">
+                    💡 <strong>$0.00 per day</strong> for spending (bills excluded)
+                </div>
+                
+                <button onclick="demoReset()" style="width:100%; padding:14px; background:#f3f4f6; color:#374151; border:none; border-radius:12px; font-size:0.875rem; cursor:pointer;">Try again with different numbers</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+let demoState = { cycle: 'fortnightly', pay: 3200, bills: [] };
+
+function demoSelectCycle(cycle) {
+    demoState.cycle = cycle;
+    document.querySelectorAll('.demo-option').forEach(b => {
+        if(b.dataset.cycle === cycle) {
+            b.style.borderColor = '#10b981';
+            b.style.background = '#ecfdf5';
+        } else {
+            b.style.borderColor = '#e5e7eb';
+            b.style.background = '#fff';
+        }
+    });
+}
+
+function demoNext(step) {
+    document.querySelectorAll('.demo-step').forEach(s => s.style.display = 'none');
+    document.getElementById('demo-step-' + step).style.display = 'block';
+    window.scrollTo({ top: document.getElementById('demo').offsetTop - 100, behavior: 'smooth' });
+}
+
+function demoUpdate() {
+    demoState.pay = parseFloat(document.getElementById('demo-pay').value) || 0;
+}
+
+function demoAddBill() {
+    const input = document.getElementById('demo-bill-input');
+    const text = input.value.trim();
+    if (!text) return;
+    
+    const match = text.match(/^([a-zA-Z\s]+)\s+(\d+(\.\d{1,2})?)$/);
+    if (!match) { input.style.borderColor = '#ef4444'; return; }
+    
+    input.style.borderColor = '#e5e7eb';
+    const name = match[1].trim();
+    const amount = parseFloat(match[2]);
+    
+    demoState.bills.push({ name, amount });
+    input.value = '';
+    
+    renderBills();
+}
+
+function renderBills() {
+    const container = document.getElementById('demo-bills');
+    let total = 0;
+    let html = '';
+    
+    demoState.bills.forEach((b, i) => {
+        total += b.amount;
+        html += '<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:#f9fafb; border-radius:8px; margin-bottom:6px;">';
+        html += '<span>' + b.name + '</span>';
+        html += '<span style="font-weight:600;">$' + b.amount.toFixed(2) + '</span>';
+        html += '<button onclick="demoRemoveBill(' + i + ')" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:1rem;">✕</button>';
+        html += '</div>';
+    });
+    
+    container.innerHTML = html;
+    document.getElementById('demo-total').textContent = 'Total: $' + total.toFixed(2);
+}
+
+function demoRemoveBill(i) {
+    demoState.bills.splice(i, 1);
+    renderBills();
+}
+
+function demoShowResult() {
+    const pay = parseFloat(document.getElementById('demo-pay').value) || 0;
+    const totalBills = demoState.bills.reduce((s, b) => s + b.amount, 0);
+    const available = pay - totalBills;
+    const daysUntilPay = 6;
+    const perDay = available / daysUntilPay;
+    
+    document.getElementById('demo-hero').querySelector('div:first-child').textContent = '$' + available.toFixed(2);
+    document.getElementById('demo-income').textContent = '$' + pay.toFixed(2);
+    document.getElementById('demo-bills-total').textContent = '-$' + totalBills.toFixed(2);
+    document.getElementById('demo-available').textContent = '$' + available.toFixed(2);
+    
+    // Per day insight
+    const insightEl = document.querySelector('#demo-step-4 .bg-green-50, #demo-step-4 [class*="bg-green"]') || 
+        document.querySelector('#demo-step-4 div[style*="f0fdf4"]');
+    if (insightEl) {
+        insightEl.innerHTML = perDay > 0 
+            ? '💡 <strong>$' + perDay.toFixed(2) + '</strong> per day for spending (bills excluded)'
+            : '⚠️ Your bills exceed your pay this cycle — time to review expenses.';
+    }
+    
+    // Color the hero based on health
+    const hero = document.getElementById('demo-hero');
+    if (available <= 0) {
+        hero.style.background = 'linear-gradient(135deg,#ef4444,#dc2626)';
+    } else if (available < pay * 0.1) {
+        hero.style.background = 'linear-gradient(135deg,#f59e0b,#d97706)';
+    } else {
+        hero.style.background = 'linear-gradient(135deg,#10b981,#059669)';
+    }
+    
+    const progress = Math.min(50 + (daysUntilPay > 0 ? (7 - daysUntilPay) * 7 : -7), 100);
+    document.getElementById('demo-progress').style.width = Math.max(progress, 5) + '%';
+    
+    demoNext(4);
+}
+
+function demoReset() {
+    demoState.bills = [];
+    document.getElementById('demo-pay').value = 3200;
+    document.getElementById('demo-bills').innerHTML = '';
+    document.getElementById('demo-total').textContent = 'Total: $0.00';
+    demoNext(1);
+}
+</script>
 
 <!-- Survey Section -->
 <section class="section" id="survey" style="background: #f8fafc;">
